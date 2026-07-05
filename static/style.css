@@ -535,8 +535,12 @@ button{
     }
 
     .map-panel {
-        height: auto;
-        min-height: 220px;
+        height: 40vh;
+        min-height: 260px;
+    }
+
+    #map {
+        min-height: 260px;
     }
 
     .content-panel {

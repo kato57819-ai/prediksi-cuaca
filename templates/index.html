@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediksi Cuaca Indonesia</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Leaflet -->
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+    <!-- Marker Cluster -->
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css"/>
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css"/>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="video-background">
+
+    <video autoplay muted loop id="bg-video">
+
+        <source
+        src="{{ url_for('static', filename='video/awan.mp4') }}"
+        type="video/mp4">
+
+    </video>
+
+</div>
+
+<div class="container">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+
+        <h1>🌦 Prediksi Cuaca Indonesia</h1>
+
+        <form action="/predict" method="POST">
+
+            <select name="kota" id="kota">
+
+                <option value="">
+                    Pilih Kota
+                </option>
+
+                {% if kota %}
+                <option selected value="{{ kota }}">
+                    {{ kota }}
+                </option>
+                {% endif %}
+
+            </select>
+
+            <button type="submit">
+                Lihat Cuaca
+            </button>
+
+        </form>
+
+        {% if error %}
+        <div class="error-box">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if hasil %}
+
+        <!-- WEATHER CARD -->
+        <div class="weather-card weather-{{ tema }}">
+
+            <div class="weather-video">
+
+                {% if tema == "hujan" %}
+
+                <video autoplay muted loop playsinline>
+                    <source src="{{ url_for('static', filename='video/hujan.mp4') }}" type="video/mp4">
+                </video>
+
+                {% elif tema == "berawan" %}
+
+                <video autoplay muted loop playsinline>
+                    <source src="{{ url_for('static', filename='video/awan.mp4') }}" type="video/mp4">
+                </video>
+
+                {% endif %}
+
+            </div>
+
+            <div class="top-weather weather-icon-{{ tema }}">
+
+                <img
+                src="https://openweathermap.org/img/wn/{{ icon }}@2x.png">
+
+                <div>
+
+                    <h1>{{ suhu }}°C</h1>
+
+                    <p>{{ deskripsi }}</p>
+
+                    <p>Kelembapan : {{ kelembapan }}%</p>
+
+                    <p>Kecepatan Angin : {{ angin }} km/h</p>
+
+                </div>
+
+            </div>
+
+            <h2>Prediksi : {{ hasil }}</h2>
+
+        </div>
+
+        <!-- CHART -->
+        <div class="chart-card">
+
+            <canvas id="weatherChart"></canvas>
+
+        </div>
+
+        <!-- FORECAST PER JAM -->
+        <h2>🕒 Prediksi 24 Jam Kedepan</h2>
+
+        <div class="hourly-container">
+
+            {% for item in forecast_jam %}
+
+            <div class="hour-card weather-{{ item.weather[0].main|lower }}">
+
+                <div class="forecast-video">
+
+                {% if item.weather[0].main == "Rain" %}
+
+                <video autoplay muted loop playsinline>
+                    <source src="{{ url_for('static', filename='video/hujan.mp4') }}" type="video/mp4">
+                </video>
+
+                {% elif item.weather[0].main == "Clouds" %}
+
+                <video autoplay muted loop playsinline>
+                    <source src="{{ url_for('static', filename='video/awan.mp4') }}" type="video/mp4">
+                </video>
+
+                {% endif %}
+
+                </div>
+
+                <p>{{ item.dt_txt[11:16] }}</p>
+
+                <img
+                src="https://openweathermap.org/img/wn/{{ item.weather[0].icon }}@2x.png">
+
+                <h3>{{ item.main.temp }}°C</h3>
+
+                <p>{{ item.weather[0].main }}</p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        <!-- FORECAST 5 HARI -->
+        <h2>📅 Prediksi 5 Hari Kedepan</h2>
+
+        <div class="forecast-container">
+
+            {% for item in forecast_harian %}
+
+            <div class="forecast-card weather-{{ item.cuaca|lower }}">
+
+                <div class="forecast-video">
+
+                {% if item.cuaca == "Rain" %}
+
+                <video autoplay muted loop playsinline>
+                    <source src="{{ url_for('static', filename='video/hujan.mp4') }}" type="video/mp4">
+                </video>
+
+                {% elif item.cuaca == "Clouds" %}
+
+                <video autoplay muted loop playsinline>
+                    <source src="{{ url_for('static', filename='video/awan.mp4') }}" type="video/mp4">
+                </video>
+
+                {% endif %}
+
+                </div>
+
+                <p>{{ item.tanggal }}</p>
+
+                <img
+                src="https://openweathermap.org/img/wn/{{ item.icon }}@2x.png">
+
+                <h3>{{ item.suhu }}°C</h3>
+
+                <p>{{ item.cuaca }}</p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+
+        <div id="map"></div>
+
+    </div>
+
+</div>
+
+{% if forecast_jam %}
+
+<script>
+
+const labels = [
+
+{% for item in forecast_jam %}
+'{{ item.dt_txt[11:16] }}',
+{% endfor %}
+
+];
+
+const temps = [
+
+{% for item in forecast_jam %}
+{{ item.main.temp }},
+{% endfor %}
+
+];
+
+</script>
+
+{% endif %}
+
+<!-- LEAFLET -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- MARKER CLUSTER -->
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+<!-- SCRIPT -->
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

@@ -534,6 +534,19 @@ button{
         min-width: 120px;
     }
 
+    .map-panel {
+        height: auto;
+        min-height: 220px;
+    }
+
+    .content-panel {
+        padding-bottom: 40px;
+    }
+
+    .left-panel {
+        max-width: 100%;
+    }
+
     h1,
     h2,
     h3,

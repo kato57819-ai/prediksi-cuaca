@@ -6,7 +6,9 @@ import joblib
 app = Flask(__name__)
 
 # Load Model Machine Learning
-model = joblib.load('model.pkl')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(BASE_DIR, 'model.pkl')
+model = joblib.load(model_path)
 
 # API OpenWeather
 API_KEY = os.environ.get('OPENWEATHER_API_KEY')

@@ -452,3 +452,83 @@ button{
     z-index:2;
 
 }
+
+@media (max-width: 960px) {
+
+    .container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .video-background {
+        display: none;
+    }
+
+    .left-panel,
+    .right-panel {
+        width: 100%;
+    }
+
+    .left-panel {
+        padding: 16px;
+        min-height: auto;
+    }
+
+    .right-panel {
+        min-height: 320px;
+        height: 320px;
+        margin-top: 18px;
+    }
+
+    #map {
+        height: 100%;
+    }
+
+    .top-weather {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .top-weather img {
+        width: 70px;
+    }
+
+    .top-weather h1 {
+        font-size: 42px;
+    }
+
+    .weather-card,
+    .chart-card,
+    .forecast-card,
+    .hour-card {
+        padding: 16px;
+        border-radius: 18px;
+    }
+
+    .weather-card {
+        margin-top: 18px;
+    }
+
+    select,
+    button {
+        font-size: 15px;
+    }
+
+    .forecast-container,
+    .hourly-container {
+        gap: 10px;
+    }
+
+    .hour-card,
+    .forecast-card {
+        min-width: 120px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+        line-height: 1.3;
+    }
+}

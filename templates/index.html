@@ -41,32 +41,36 @@
 
 <div class="container">
 
-    <!-- LEFT PANEL -->
-    <div class="left-panel">
+    <div class="map-panel">
+        <div id="map"></div>
+    </div>
 
-        <h1>🌦 Prediksi Cuaca Indonesia</h1>
+    <div class="content-panel">
 
-        <form action="/predict" method="POST">
+        <!-- LEFT PANEL -->
+        <div class="left-panel">
 
-            <select name="kota" id="kota">
+            <h1>🌦 Prediksi Cuaca Indonesia</h1>
 
-                <option value="">
-                    Pilih Kota
-                </option>
+            <form action="/predict" method="POST">
 
-                {% if kota %}
-                <option selected value="{{ kota }}">
-                    {{ kota }}
-                </option>
-                {% endif %}
+                <input
+                    type="text"
+                    name="kota"
+                    id="kota-input"
+                    list="city-list"
+                    placeholder="Ketik nama kota..."
+                    autocomplete="off"
+                    value="{{ kota if kota }}"
+                >
 
-            </select>
+                <datalist id="city-list"></datalist>
 
-            <button type="submit">
-                Lihat Cuaca
-            </button>
+                <button type="submit">
+                    Lihat Cuaca
+                </button>
 
-        </form>
+            </form>
 
         {% if error %}
         <div class="error-box">
@@ -214,11 +218,6 @@
         {% endif %}
 
     </div>
-
-    <!-- RIGHT PANEL -->
-    <div class="right-panel">
-
-        <div id="map"></div>
 
     </div>
 

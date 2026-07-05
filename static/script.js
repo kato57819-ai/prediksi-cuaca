@@ -65,11 +65,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const markers = L.markerClusterGroup();
 
     // ==========================
-    // DROPDOWN
+    // INPUT LIST
     // ==========================
 
-    const kotaSelect =
-        document.getElementById("kota");
+    const kotaInput =
+        document.getElementById("kota-input");
+    const cityList =
+        document.getElementById("city-list");
 
     // ==========================
     // LOAD JSON
@@ -95,11 +97,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     document.createElement("option");
 
                 option.value = city.name;
+                option.label = city.province;
 
-                option.textContent =
-                    `${city.name} (${city.province})`;
-
-                kotaSelect.appendChild(option);
+                cityList.appendChild(option);
 
                 // ==========================
                 // MARKER
@@ -121,8 +121,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 marker.on('click', function () {
 
-                    // Simpan posisi terakhir
-
                     localStorage.setItem(
                         "mapCenter",
                         JSON.stringify(map.getCenter())
@@ -133,7 +131,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         map.getZoom()
                     );
 
-                    kotaSelect.value =
+                    kotaInput.value =
                         city.name;
 
                     document
